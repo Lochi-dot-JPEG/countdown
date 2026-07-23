@@ -13,14 +13,14 @@ function Room:new(_tiles, _position)
 end
 
 function Room:Draw()
-	print("Draws at " .. self.position.x .. ", " .. self.position.y)
+	local room_pos = self.position - Position
 	for y = 1, #self.tiles do
 		for x = 1, #self.tiles[y] do
 			local tile_value = self.tiles[y][x]
 			if tile_value == 0 then
 				goto continue
 			end
-			love.graphics.draw(test_texture, x * tileSize, y * tileSize)
+			love.graphics.draw(test_texture, room_pos.x + x * tileSize, room_pos.y + y * tileSize)
 			::continue::
 		end
 	end
@@ -39,5 +39,5 @@ Rooms.first_room = Room:new(
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, },
 	},
-	{ x = 10, y = 12 }
+	Vector.new(10, 12)
 )

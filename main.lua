@@ -1,7 +1,10 @@
 local countdown_length = 30
 local time = countdown_length
 
+require('input')
+require('vectors')
 require('map')
+require('player')
 
 function love.draw()
 	love.graphics.print("Hello World!", 400, 300)
@@ -11,4 +14,5 @@ end
 
 function love.update(dt)
 	time = time - dt
+	player_update(dt)
 end

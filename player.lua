@@ -1,13 +1,24 @@
 Position = Vector.new(0, 0)
 
-PlayerSpeed = 200
-local last_position
+PlayerSpeed = 20
+
+local velocity = Vector.new(0, 0)
+local gravity = 8
+local drag = 5
 
 function Player_Draw()
 	local draw_x = love.graphics.getWidth() / 2 - 16
 	local draw_y = love.graphics.getHeight() / 2 - 16
 	print("drawx " .. draw_x .. " " .. draw_y)
 	love.graphics.draw(Textures.player, draw_x, draw_y)
+end
+
+local function accel_x(amount)
+	velocity.x = velocity.x + amount
+end
+
+local function accel_y(amount)
+	velocity.y = velocity.y + amount
 end
 
 local function move_x(amount)
@@ -35,16 +46,21 @@ function is_colliding()
 end
 
 function player_update(dt)
+	velocity.y = velocity.y + dt * gravity
 	if input_pressed(Inputs.down) then
-		move_y(dt * PlayerSpeed)
+		accel_y(dt * PlayerSpeed)
 	end
 	if input_pressed(Inputs.up) then
-		move_y(-dt * PlayerSpeed)
+		accel_y(-dt * PlayerSpeed)
 	end
 	if input_pressed(Inputs.left) then
-		move_x(-dt * PlayerSpeed)
+		accel_x(-dt * PlayerSpeed)
 	end
 	if input_pressed(Inputs.right) then
-		move_x(dt * PlayerSpeed)
+		accel_x(dt * PlayerSpeed)
 	end
+	velocity.x = velocity.x * (1 - drag * dt)
+	velocity.y = velocity.y * (1 - drag * dt)
+	move_x(velocity.x)
+	move_y(velocity.y)
 end

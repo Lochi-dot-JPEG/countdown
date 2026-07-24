@@ -7,8 +7,8 @@ local gravity = 8
 local drag = 5
 
 function Player_Draw()
-	local draw_x = love.graphics.getWidth() / 2 - 16
-	local draw_y = love.graphics.getHeight() / 2 - 16
+	local draw_x = GameWidth / 2 - 16
+	local draw_y = GameHeight / 2 - 16
 	print("drawx " .. draw_x .. " " .. draw_y)
 	love.graphics.draw(Textures.player, draw_x, draw_y)
 end

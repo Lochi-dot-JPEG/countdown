@@ -23,7 +23,7 @@ function PromptLoad()
 	end
 	outputs.complist = function() Notify(listClues()) end
 	outputs.comphelp = function() Notify("Did you need a CLUE?") end
-	outputs.compclue = function() Notify("I the door is broken. Maybe SHUTting it might do something.") end
+	outputs.compclue = function() Notify("The door is broken.\nMaybe SHUTting it might\ndo something.") end
 	textObject = love.graphics.newText(AsepriteFont, "hi")
 end
 
@@ -52,6 +52,7 @@ function love.textinput(t)
 	end
 	if string.len(typedText) < 4 then
 		typedText = typedText .. t
+		typedText = string.lower(typedText)
 	end
 end
 
@@ -62,7 +63,7 @@ local function Release()
 end
 
 local function SubmitCode()
-	local attempt = promptType .. typedText
+	local attempt = string.lower(promptType .. typedText)
 	print("Attempted " .. attempt)
 	local attemptResult = outputs[attempt]
 	if attemptResult == nil then

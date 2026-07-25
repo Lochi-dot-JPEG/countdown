@@ -53,6 +53,8 @@ function love.load()
 	Textures.base = love.graphics.newImage("textures/base.png")
 	Textures.base_back = love.graphics.newImage("textures/baseback.png")
 	Textures.prompt = love.graphics.newImage("textures/prompt.png")
+	Textures.outputbg = love.graphics.newImage("textures/outputbg.png")
+
 	low_res_canvas = love.graphics.newCanvas(GameWidth, GameHeight)
 	LoadRooms()
 	PromptLoad()

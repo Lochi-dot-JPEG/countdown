@@ -2,8 +2,8 @@ Outputting = false
 
 local textObject = nil
 
-local drawPosX = GameWidth / 2 - 10
-local drawPosY = GameHeight / 2 - 64
+local drawPosX = GameWidth / 2 - 48
+local drawPosY = GameHeight / 2 - 48
 
 function OutputsLoad()
 	textObject = love.graphics.newText(AsepriteFont, "output")
@@ -34,6 +34,7 @@ function OutputUpdate(dt) end
 
 function OutputDraw()
 	if Outputting then
-		love.graphics.draw(textObject, drawPosX, drawPosY + 64)
+		love.graphics.draw(Textures.outputbg, drawPosX - 16, drawPosY - 16)
+		love.graphics.draw(textObject, drawPosX, drawPosY)
 	end
 end

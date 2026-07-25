@@ -4,12 +4,31 @@ local textObject = nil
 
 local lastRenderedText = "this hasnt been rendered yet"
 local typedText = ""
+local promptType = ""
+
 local drawPosX = GameWidth / 2 - 10
 local drawPosY = GameHeight / 2 - 64
 local promptDrawPosX = GameWidth / 2 - 32
 local promptDrawPosY = GameHeight / 2 - 16 - 60
 
-function Prompt(type)
+local outputs = {}
+
+local function listClues()
+	return "Clues: \n1. idk"
+end
+function PromptLoad()
+	outputs.bdoorshut = function()
+		Unlocks.base_open = true
+		Notify("Opening!")
+	end
+	outputs.complist = function() Notify(listClues()) end
+	outputs.comphelp = function() Notify("Did you need a CLUE?") end
+	outputs.compclue = function() Notify("I the door is broken. Maybe SHUTting it might do something.") end
+	textObject = love.graphics.newText(AsepriteFont, "hi")
+end
+
+function Prompt(pType)
+	promptType = pType
 	Prompting = true
 	PlayerPos = (GetTileIndex(CurrentRoom, PlayerPos) + CurrentRoom.position) * tileSize
 	PlayerPos.x = PlayerPos.x + tileSize / 2
@@ -19,27 +38,12 @@ function Prompt(type)
 end
 
 function PromptDraw()
-	if textObject == nil then
-		print(love.graphics.newText(AsepriteFont, "hi"))
-		textObject = love.graphics.newText(AsepriteFont, "hi")
-	end
 	if lastRenderedText ~= typedText then
 		textObject:set("> " .. typedText)
 		lastRenderedText = typedText
 	end
 	love.graphics.draw(Textures.prompt, promptDrawPosX, promptDrawPosY)
 	love.graphics.draw(textObject, drawPosX, drawPosY)
-end
-
-function love.keypressed(key, scancode, isrepeat)
-	if not Prompting then
-		return
-	end
-	if key == "backspace" then
-		if string.len(typedText) > 0 then
-			typedText = string.sub(typedText, 0, string.len(typedText) - 1)
-		end
-	end
 end
 
 function love.textinput(t)
@@ -51,15 +55,40 @@ function love.textinput(t)
 	end
 end
 
-function FinishPrompt()
+local function Release()
 	Prompting = false
-	MoveY(-16)
+	MoveY(-11)
 	SetVelocity(Vector.new(0, -5))
 end
 
-function PromptUpdate(dt)
-	print(Unlocks.base_open)
-	if input_pressed(Inputs.continue) then
-		FinishPrompt()
+local function SubmitCode()
+	local attempt = promptType .. typedText
+	print("Attempted " .. attempt)
+	local attemptResult = outputs[attempt]
+	if attemptResult == nil then
+		Release()
+		return
+	end
+	attemptResult()
+	if not Outputting then
+		Release()
+	end
+	Prompting = false
+end
+
+
+function PromptUpdate(dt) end
+
+function PromptKeypressed(key, scancode, isrepeat)
+	if not Prompting then
+		return
+	end
+	if key == "return" then
+		SubmitCode()
+	end
+	if key == "backspace" then
+		if string.len(typedText) > 0 then
+			typedText = string.sub(typedText, 0, string.len(typedText) - 1)
+		end
 	end
 end

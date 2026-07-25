@@ -7,7 +7,6 @@ Inputs.continue = { "return" }
 
 function input_pressed(inputs)
 	for i = 1, #inputs do
-		print(inputs[i])
 		if love.keyboard.isDown(inputs[i]) then
 			return true
 		end

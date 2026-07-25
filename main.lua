@@ -8,12 +8,14 @@ require("vectors")
 require("map")
 require("player")
 require("prompt")
+require("output")
 
 CurrentRoom = nil
 Textures = {}
 
 Unlocks = {}
 Unlocks.base_open = false
+
 
 AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
@@ -26,15 +28,15 @@ function love.draw()
 	love.graphics.print("Hello World!", 400, 300)
 	love.graphics.print("You have " .. math.floor(time) .. " seconds left!", 400, 350)
 
+
+	Room.DrawBg(CurrentRoom)
+	Player_Draw()
+	Room.Draw(CurrentRoom)
+
 	if Prompting then
-		Room.DrawBg(CurrentRoom)
-		Player_Draw()
-		Room.Draw(CurrentRoom)
 		PromptDraw()
-	else
-		Room.DrawBg(CurrentRoom)
-		Player_Draw()
-		Room.Draw(CurrentRoom)
+	elseif Outputting then
+		OutputDraw(dt)
 	end
 
 	love.graphics.setCanvas()
@@ -53,15 +55,26 @@ function love.load()
 	Textures.prompt = love.graphics.newImage("textures/prompt.png")
 	low_res_canvas = love.graphics.newCanvas(GameWidth, GameHeight)
 	LoadRooms()
+	PromptLoad()
+	OutputsLoad()
 	CurrentRoom = Rooms.base
+end
+
+function love.keypressed(key, scancode, isrepeat)
+	if Prompting then
+		PromptKeypressed(key, scancode, isrepeat)
+	elseif Outputting then
+		OutputKeypressed(key, scancode, isrepeat)
+	end
 end
 
 function love.update(dt)
 	time = time - dt
 	if Prompting then
 		PromptUpdate(dt)
+	elseif Outputting then
+		OutputUpdate(dt)
 	else
 		PlayerUpdate(dt)
 	end
-	print("base open " .. tostring(Unlocks.base_open))
 end

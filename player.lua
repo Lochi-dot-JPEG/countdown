@@ -3,13 +3,12 @@ PlayerPos = Vector.new(0, 0)
 PlayerSpeed = 20
 
 local velocity = Vector.new(0, 0)
-local gravity = 8
-local drag = 5
+local gravity = 10
+local drag = 8
 
 function Player_Draw()
 	local draw_x = GameWidth / 2 - 16
 	local draw_y = GameHeight / 2 - 16
-	print("drawx " .. draw_x .. " " .. draw_y)
 	love.graphics.draw(Textures.player, draw_x, draw_y)
 end
 
@@ -44,6 +43,7 @@ end
 function SetVelocity(_velocity)
 	velocity = _velocity
 end
+
 function MoveY(amount)
 	local last_position = PlayerPos.y
 	PlayerPos.y = PlayerPos.y + amount
@@ -71,8 +71,6 @@ function PlayerUpdate(dt)
 	end
 	velocity.x = velocity.x * (1 - drag * dt)
 	velocity.y = velocity.y * (1 - drag * dt)
-	MoveX(velocity.x)
-	MoveY(velocity.y)
-	print("velocity" .. velocity.x .. " ," .. velocity.y)
-	print("position" .. PlayerPos.x .. " ," .. PlayerPos.y)
+	MoveX(velocity.x * dt * 20)
+	MoveY(velocity.y * dt * 20)
 end

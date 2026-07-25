@@ -3,13 +3,19 @@ local time = countdown_length
 GameWidth = 320
 GameHeight = 180
 local window_flags = { vsync = 1, resizable = true }
-
 require("input")
 require("vectors")
 require("map")
 require("player")
+require("prompt")
 
+CurrentRoom = nil
 Textures = {}
+
+Unlocks = {}
+Unlocks.base_open = false
+
+AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
 local low_res_canvas
 
@@ -20,14 +26,20 @@ function love.draw()
 	love.graphics.print("Hello World!", 400, 300)
 	love.graphics.print("You have " .. math.floor(time) .. " seconds left!", 400, 350)
 
-	Room.Draw(Rooms.first_room)
-	Player_Draw()
+	if Prompting then
+		Room.DrawBg(CurrentRoom)
+		Room.Draw(CurrentRoom)
+		PromptDraw()
+	else
+		Room.DrawBg(CurrentRoom)
+		Player_Draw()
+		Room.Draw(CurrentRoom)
+	end
 
 	love.graphics.setCanvas()
 	love.graphics.clear(0, 0, 0)
 	local win_width, win_height = love.graphics.getDimensions()
 	love.graphics.draw(low_res_canvas, 0, 0, 0, win_width / GameWidth, win_height / GameHeight)
-	--love.graphics.draw(low_res_canvas, 0, 0, 0)
 end
 
 function love.load()
@@ -35,10 +47,20 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest", 0)
 	Textures.tile_a = love.graphics.newImage("textures/cookies.png")
 	Textures.player = love.graphics.newImage("textures/player.png")
+	Textures.base = love.graphics.newImage("textures/base.png")
+	Textures.base_back = love.graphics.newImage("textures/baseback.png")
 	low_res_canvas = love.graphics.newCanvas(GameWidth, GameHeight)
+	LoadRooms()
+	CurrentRoom = Rooms.base
+	Prompt("computer")
 end
 
 function love.update(dt)
 	time = time - dt
-	player_update(dt)
+	if Prompting then
+		PromptUpdate(dt)
+	else
+		PlayerUpdate(dt)
+	end
+	print("base open " .. tostring(Unlocks.base_open))
 end

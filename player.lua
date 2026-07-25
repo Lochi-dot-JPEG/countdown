@@ -21,31 +21,38 @@ local function accel_y(amount)
 	velocity.y = velocity.y + amount
 end
 
-local function move_x(amount)
+local function get_collider()
+	local tile_collision = GetTile(CurrentRoom, Position)
+	return tile_collision
+	--	if tile_collision ~= nil and tile_collision ~= 0 then
+	--		return 1
+	--	end
+	--	return 0
+end
+
+function MoveX(amount)
 	local last_position = Position.x
 	Position.x = Position.x + amount
-	if is_colliding() then
+	local collider = get_collider()
+	if collider == 1 then
 		Position.x = last_position
+	elseif type(collider) == "string" then
+		Prompt(collider)
 	end
 end
 
-local function move_y(amount)
+function MoveY(amount)
 	local last_position = Position.y
 	Position.y = Position.y + amount
-	if is_colliding() then
+	local collider = get_collider()
+	if collider == 1 then
 		Position.y = last_position
+	elseif type(collider) == "string" then
+		Prompt(collider)
 	end
 end
 
-function is_colliding()
-	local tile_collision = GetTile(Rooms.first_room, Position)
-	if tile_collision ~= nil and tile_collision ~= 0 then
-		return true
-	end
-	return false
-end
-
-function player_update(dt)
+function PlayerUpdate(dt)
 	velocity.y = velocity.y + dt * gravity
 	if input_pressed(Inputs.down) then
 		accel_y(dt * PlayerSpeed)
@@ -61,6 +68,8 @@ function player_update(dt)
 	end
 	velocity.x = velocity.x * (1 - drag * dt)
 	velocity.y = velocity.y * (1 - drag * dt)
-	move_x(velocity.x)
-	move_y(velocity.y)
+	MoveX(velocity.x)
+	MoveY(velocity.y)
+	print("velocity" .. velocity.x .. " ," .. velocity.y)
+	print("position" .. Position.x .. " ," .. Position.y)
 end

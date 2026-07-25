@@ -19,7 +19,6 @@ function PromptDraw()
 		textObject:set(typedText)
 		lastRenderedText = typedText
 	end
-	--textObject.set("this is a prompt\n123456789")
 	love.graphics.draw(textObject, 0, 0)
 end
 
@@ -37,5 +36,6 @@ function PromptUpdate(dt)
 	if input_pressed(Inputs.continue) then
 		Prompting = false
 		MoveY(-16)
+		SetVelocity(Vector.new(0, -5))
 	end
 end

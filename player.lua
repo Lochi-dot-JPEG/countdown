@@ -41,6 +41,9 @@ function MoveX(amount)
 	end
 end
 
+function SetVelocity(_velocity)
+	velocity = _velocity
+end
 function MoveY(amount)
 	local last_position = Position.y
 	Position.y = Position.y + amount

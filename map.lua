@@ -9,7 +9,7 @@ function Room:new(_tiles, _position, foreground_texture, background_texture)
 end
 
 local function get_draw_pos(room)
-	local room_pos = room.position * tileSize - Position
+	local room_pos = room.position * tileSize - PlayerPos
 
 	room_pos.x = room_pos.x + GameWidth / 2 + 16
 	room_pos.y = room_pos.y + GameHeight / 2 + 16
@@ -52,14 +52,19 @@ function LoadRooms()
 	}, Vector.new(-5, -3))
 end
 
+function GetTileIndex(room, position)
+	local tile_position = position / tileSize
+	tile_position.x = math.floor(tile_position.x) - room.position.x
+	tile_position.y = math.floor(tile_position.y) - room.position.y
+	return tile_position
+end
+
 function GetTile(room, position)
 	if room == nil then
 		return
 	end
-	local tile_position = position / tileSize
-	tile_position.x = math.floor(tile_position.x) - room.position.x
-	tile_position.y = math.floor(tile_position.y) - room.position.y
 	local tile = nil
+	local tile_position = GetTileIndex(room, position)
 	local y = room.tiles[tile_position.y]
 	if y ~= nil then
 		tile = y[tile_position.x]

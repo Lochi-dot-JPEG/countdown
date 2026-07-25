@@ -28,6 +28,7 @@ function love.draw()
 
 	if Prompting then
 		Room.DrawBg(CurrentRoom)
+		Player_Draw()
 		Room.Draw(CurrentRoom)
 		PromptDraw()
 	else
@@ -49,10 +50,10 @@ function love.load()
 	Textures.player = love.graphics.newImage("textures/player.png")
 	Textures.base = love.graphics.newImage("textures/base.png")
 	Textures.base_back = love.graphics.newImage("textures/baseback.png")
+	Textures.prompt = love.graphics.newImage("textures/prompt.png")
 	low_res_canvas = love.graphics.newCanvas(GameWidth, GameHeight)
 	LoadRooms()
 	CurrentRoom = Rooms.base
-	Prompt("computer")
 end
 
 function love.update(dt)

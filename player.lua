@@ -1,4 +1,4 @@
-Position = Vector.new(0, 0)
+PlayerPos = Vector.new(0, 0)
 
 PlayerSpeed = 20
 
@@ -22,7 +22,7 @@ local function accel_y(amount)
 end
 
 local function get_collider()
-	local tile_collision = GetTile(CurrentRoom, Position)
+	local tile_collision = GetTile(CurrentRoom, PlayerPos)
 	return tile_collision
 	--	if tile_collision ~= nil and tile_collision ~= 0 then
 	--		return 1
@@ -31,11 +31,11 @@ local function get_collider()
 end
 
 function MoveX(amount)
-	local last_position = Position.x
-	Position.x = Position.x + amount
+	local last_position = PlayerPos.x
+	PlayerPos.x = PlayerPos.x + amount
 	local collider = get_collider()
 	if collider == 1 then
-		Position.x = last_position
+		PlayerPos.x = last_position
 	elseif type(collider) == "string" then
 		Prompt(collider)
 	end
@@ -45,11 +45,11 @@ function SetVelocity(_velocity)
 	velocity = _velocity
 end
 function MoveY(amount)
-	local last_position = Position.y
-	Position.y = Position.y + amount
+	local last_position = PlayerPos.y
+	PlayerPos.y = PlayerPos.y + amount
 	local collider = get_collider()
 	if collider == 1 then
-		Position.y = last_position
+		PlayerPos.y = last_position
 	elseif type(collider) == "string" then
 		Prompt(collider)
 	end
@@ -74,5 +74,5 @@ function PlayerUpdate(dt)
 	MoveX(velocity.x)
 	MoveY(velocity.y)
 	print("velocity" .. velocity.x .. " ," .. velocity.y)
-	print("position" .. Position.x .. " ," .. Position.y)
+	print("position" .. PlayerPos.x .. " ," .. PlayerPos.y)
 end

@@ -1,10 +1,10 @@
 PlayerPos = Vector.new(0, 0)
 
-PlayerSpeed = 20
+PlayerSpeed = 10
 
 local velocity = Vector.new(0, 0)
-local gravity = 10
-local drag = 8
+local gravity = 5
+local drag = 3
 
 function Player_Draw()
 	local draw_x = GameWidth / 2 - 16
@@ -55,13 +55,23 @@ function MoveY(amount)
 	end
 end
 
+local function CheckNewRoom()
+	if PlayerPos.x < -48 and CurrentRoom == Rooms.base then
+		CurrentRoom = Rooms.first_room
+	end
+	if PlayerPos.x > -48 and CurrentRoom == Rooms.first_room then
+		CurrentRoom = Rooms.base
+	end
+end
+
 function PlayerUpdate(dt)
-	velocity.y = velocity.y + dt * gravity
 	if input_pressed(Inputs.down) then
 		accel_y(dt * PlayerSpeed)
 	end
 	if input_pressed(Inputs.up) then
 		accel_y(-dt * PlayerSpeed)
+	else
+		velocity.y = velocity.y + dt * gravity
 	end
 	if input_pressed(Inputs.left) then
 		accel_x(-dt * PlayerSpeed)
@@ -71,6 +81,7 @@ function PlayerUpdate(dt)
 	end
 	velocity.x = velocity.x * (1 - drag * dt)
 	velocity.y = velocity.y * (1 - drag * dt)
-	MoveX(velocity.x * dt * 20)
-	MoveY(velocity.y * dt * 20)
+	MoveX(velocity.x * dt * 40)
+	MoveY(velocity.y * dt * 40)
+	CheckNewRoom()
 end

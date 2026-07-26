@@ -55,6 +55,12 @@ function love.load()
 	Textures.prompt = love.graphics.newImage("textures/prompt.png")
 	Textures.outputbg = love.graphics.newImage("textures/outputbg.png")
 
+	local roomCount = 3
+	for i = 1, roomCount do
+		Textures["fg" .. i] = love.graphics.newImage("textures/fg" .. i .. ".png")
+		Textures["bg" .. i] = love.graphics.newImage("textures/bg" .. i .. ".png")
+	end
+
 	low_res_canvas = love.graphics.newCanvas(GameWidth, GameHeight)
 	LoadRooms()
 	PromptLoad()

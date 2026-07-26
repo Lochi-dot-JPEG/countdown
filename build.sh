@@ -1,5 +1,8 @@
 #!/bin/sh
 
+cd textures
+sh asepritecompile.sh
+cd ..
 mkdir output
 rm countdown.love
 zip -9 -r countdown.love .

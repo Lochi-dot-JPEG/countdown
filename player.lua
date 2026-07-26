@@ -1,6 +1,6 @@
-PlayerPos = Vector.new(0, 0)
+PlayerPos = Vector.new(32 - 320 * 2, 32)
 
-PlayerSpeed = 5
+PlayerSpeed = 20
 
 local velocity = Vector.new(0, 0)
 local gravity = 2.5
@@ -55,13 +55,45 @@ function MoveY(amount)
 	end
 end
 
-local function CheckNewRoom()
-	if PlayerPos.x < -48 and CurrentRoom == Rooms.base then
-		CurrentRoom = Rooms.first_room
+-- This is so ugly
+local function GetRoom()
+	local tile = PlayerPos / 320
+	tile.x = math.floor(tile.x)
+	tile.y = math.floor(tile.y)
+	print(tile.x .. ", " .. tile.y)
+	if tile.y == 0 then
+		if tile.x == 0 then
+			return Rooms.base
+		elseif tile.x == -1 then
+			return Rooms.first_room
+		elseif tile.x == -2 then
+			return Rooms.second_room
+		end
+	elseif tile.y == -1 then
+		if tile.x == -2 then
+			print("left center")
+			return Rooms.left_center
+		elseif tile.x == -1 then
+			print("center_center")
+			return Rooms.center_center
+		elseif tile.x == 0 then
+			print("right_center")
+			return Rooms.right_center
+		end
+	elseif tile.y == -2 then
+		if tile.x == 0 then
+			print("right_top")
+			return Rooms.right_top
+		elseif tile.x == -1 then
+			print("center_top")
+			return Rooms.center_top
+		elseif tile.x == -2 then
+			print("left_top")
+			return Rooms.left_top
+		end
 	end
-	if PlayerPos.x > -48 and CurrentRoom == Rooms.first_room then
-		CurrentRoom = Rooms.base
-	end
+	print("couldnt find")
+	return Rooms.base
 end
 
 function PlayerUpdate(dt)
@@ -83,5 +115,5 @@ function PlayerUpdate(dt)
 	velocity.y = velocity.y * (1 - drag * dt)
 	MoveX(velocity.x * dt * 20)
 	MoveY(velocity.y * dt * 20)
-	CheckNewRoom()
+	CurrentRoom = GetRoom()
 end

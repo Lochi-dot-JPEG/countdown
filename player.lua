@@ -1,7 +1,8 @@
-PlayerPos = Vector.new(32 - 320, 32)
+--PlayerPos = Vector.new(32 - 320, 32)
+PlayerPos = Vector.new(32, 32)
 
 PlayerSpeed = 20
-PickupDistance = 8 * 8
+PickupDistance = 12 * 12 -- Uses distance squared because square roots are bad
 
 local velocity = Vector.new(0, 0)
 local gravity = 2.5
@@ -28,11 +29,30 @@ end
 
 local function get_collider()
 	local tile_collision = GetTile(CurrentRoom, PlayerPos)
+	if tile_collision == 0 then
+		for key, object in pairs(CurrentRoom.objects) do
+			if object.width ~= nil then
+				if object:ContainsPoint(PlayerPos) then
+					return 1
+				end
+			end
+		end
+	end
 	return tile_collision
 	--	if tile_collision ~= nil and tile_collision ~= 0 then
 	--		return 1
 	--	end
 	--	return 0
+end
+
+local function StoreItems()
+	for key, object in pairs(holding_objects) do
+		if object.id ~= nil and type(object.id) == "string" then
+			LogUnlocks[object.id] = true
+			print("Adds to log " .. object.id)
+		end
+	end
+	holding_objects = {}
 end
 
 function MoveX(amount)
@@ -42,6 +62,9 @@ function MoveX(amount)
 	if collider == 1 then
 		PlayerPos.x = last_position
 	elseif type(collider) == "string" then
+		if collider == "comp" then
+			StoreItems()
+		end
 		Prompt(collider)
 	end
 end
@@ -77,28 +100,21 @@ local function GetRoom()
 		end
 	elseif tile.y == -1 then
 		if tile.x == -2 then
-			print("left center")
 			return Rooms.left_center
 		elseif tile.x == -1 then
-			print("center_center")
 			return Rooms.center_center
 		elseif tile.x == 0 then
-			print("right_center")
 			return Rooms.right_center
 		end
 	elseif tile.y == -2 then
 		if tile.x == 0 then
-			print("right_top")
 			return Rooms.right_top
 		elseif tile.x == -1 then
-			print("center_top")
 			return Rooms.center_top
 		elseif tile.x == -2 then
-			print("left_top")
 			return Rooms.left_top
 		end
 	end
-	print("couldnt find")
 	return Rooms.base
 end
 
@@ -120,15 +136,20 @@ function PlayerUpdate(dt)
 	velocity.x = velocity.x * (1 - drag * dt)
 	velocity.y = velocity.y * (1 - drag * dt)
 	MoveX(velocity.x * dt * 20)
+	CurrentRoom = GetRoom()
 	MoveY(velocity.y * dt * 20)
 	CurrentRoom = GetRoom()
 	for key, object in pairs(CurrentRoom.objects) do
 		if object.position ~= nil then
 			local dist = Vector.distance_squared_to(object.position + object_offset, PlayerPos)
-			print("dist " .. dist)
 			if dist < PickupDistance then
 				table.remove(CurrentRoom.objects, key)
 				table.insert(holding_objects, object)
+			end
+		end
+		if object.width ~= nil then
+			if Unlocks[object.unlock] == true then
+				table.remove(CurrentRoom.objects, key)
 			end
 		end
 	end

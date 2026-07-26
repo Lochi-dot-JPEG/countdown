@@ -5,18 +5,6 @@ function Room:new(_tiles, _position, foreground_texture, background_texture)
 	return setmetatable(newRoom, self)
 end
 
-Paper = {}
-function Paper:new(_position, _id)
-	local newPaper = { position = _position * TileSize, id = _id }
-	self.__index = self
-	return setmetatable(newPaper, self)
-end
-
-function Paper:Draw()
-	local paper_pos = self.position - PlayerPos
-	love.graphics.draw(Textures.paper, paper_pos.x + DefaultOffsetX, paper_pos.y + DefaultOffsetY)
-end
-
 function Room:addObject(object)
 	if self.objects == nil then
 		local new_objects = { object }
@@ -45,6 +33,9 @@ function Room:Draw()
 
 	for key, object in pairs(self.objects) do
 		if object.position ~= nil then
+			object:Draw()
+		end
+		if object.width ~= nil then
 			object:Draw()
 		end
 	end
@@ -92,6 +83,7 @@ function LoadRooms()
 		{ 1, 0, "bdoor", 0, 0, 0, 0, 0, 0, 0, 0,      0, 1 },
 		{ 1, 1, 1,       1, 1, 1, 1, 1, 1, 1, 1,      1, 1 },
 	}, Vector.new(0, 0), getFg(1), getBg(1))
+	Rooms.base:addObject(Door:new(0, 3, 1, 2, "base_open"))
 
 	Rooms.first_room = Room:new({
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -111,13 +103,11 @@ function LoadRooms()
 		{ 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1 },
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 },
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	}, Vector.new(-20, 0), getFg(2), getBg(2))
 	Rooms.first_room:addObject(Paper:new(Vector.new(-2, 17), "loga"))
-	Rooms.first_room:addObject(Paper:new(Vector.new(-8, 17), "loga"))
-	Rooms.first_room:addObject(Paper:new(Vector.new(-12, 17), "loga"))
 
 	Rooms.second_room = Room:new({
 		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, },

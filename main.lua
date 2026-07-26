@@ -10,7 +10,9 @@ TileSize = 16
 
 local love = require("love")
 require("input")
+require("door")
 require("vectors")
+require("paper")
 require("map")
 require("player")
 require("prompt")
@@ -20,11 +22,13 @@ CurrentRoom = nil
 Textures = {}
 
 Unlocks = {}
+LogUnlocks = {}
 Unlocks.base_open = false
 
 
 AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
+AsepriteFont:setLineHeight(1.2)
 local low_res_canvas
 
 function love.draw()

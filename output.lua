@@ -12,7 +12,7 @@ end
 local function finishOutput()
 	Outputting = false
 	MoveY(-11)
-	SetVelocity(Vector.new(0, -5))
+	SetVelocity(Vector.new(0, -2))
 end
 
 function OutputKeypressed(key, scancode, isrepeat)

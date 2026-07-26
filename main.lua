@@ -1,8 +1,14 @@
 local countdown_length = 30
 local time = countdown_length
+local window_flags = { vsync = 1, resizable = true }
+
 GameWidth = 320
 GameHeight = 180
-local window_flags = { vsync = 1, resizable = true }
+DefaultOffsetX = GameWidth / 2
+DefaultOffsetY = GameHeight / 2
+TileSize = 16
+
+local love = require("love")
 require("input")
 require("vectors")
 require("map")
@@ -54,6 +60,7 @@ function love.load()
 	Textures.base_back = love.graphics.newImage("textures/baseback.png")
 	Textures.prompt = love.graphics.newImage("textures/prompt.png")
 	Textures.outputbg = love.graphics.newImage("textures/outputbg.png")
+	Textures.paper = love.graphics.newImage("textures/paper.png")
 
 	local roomCount = 9
 	for i = 1, roomCount do

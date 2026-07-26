@@ -69,3 +69,17 @@ end
 function Vector.__tostring(v)
 	return "(" .. v.x .. ", " .. v.y .. ")"
 end
+
+-- lerp
+function Vector.lerp(a, b, t)
+	local x = a.x * (1 - t) + b.x * t
+	local y = a.y * (1 - t) + b.y * t
+	return Vector.new(x, y)
+end
+
+-- distancesquared
+function Vector.distance_squared_to(a, b)
+	local x = b.x - a.x
+	local y = b.y - a.y
+	return x * x + y * y
+end

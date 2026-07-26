@@ -6,10 +6,10 @@ local lastRenderedText = "this hasnt been rendered yet"
 local typedText = ""
 local promptType = ""
 
-local drawPosX = GameWidth / 2 - 10
-local drawPosY = GameHeight / 2 - 64
-local promptDrawPosX = GameWidth / 2 - 32
-local promptDrawPosY = GameHeight / 2 - 16 - 60
+local drawPosX = DefaultOffsetX - 10
+local drawPosY = DefaultOffsetY - 64
+local promptDrawPosX = DefaultOffsetX - 32
+local promptDrawPosY = DefaultOffsetY - 16 - 60
 
 local outputs = {}
 
@@ -30,9 +30,9 @@ end
 function Prompt(pType)
 	promptType = pType
 	Prompting = true
-	PlayerPos = (GetTileIndex(CurrentRoom, PlayerPos) + CurrentRoom.position) * tileSize
-	PlayerPos.x = PlayerPos.x + tileSize / 2
-	PlayerPos.y = PlayerPos.y + 10
+	PlayerPos = (GetTileIndex(CurrentRoom, PlayerPos) + CurrentRoom.position) * TileSize
+	PlayerPos.x = PlayerPos.x - TileSize / 2
+	PlayerPos.y = PlayerPos.y - 6
 	typedText = ""
 	Unlocks["base_open"] = true
 end
@@ -59,7 +59,7 @@ end
 local function Release()
 	Prompting = false
 	MoveY(-11)
-	SetVelocity(Vector.new(0, -5))
+	SetVelocity(Vector.new(0, -1))
 end
 
 local function SubmitCode()

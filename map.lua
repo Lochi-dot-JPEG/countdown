@@ -1,18 +1,36 @@
 Room = {}
-
-tileSize = 16
-
 function Room:new(_tiles, _position, foreground_texture, background_texture)
-	newRoom = { position = _position, tiles = _tiles, fg = foreground_texture, bg = background_texture }
+	local newRoom = { position = _position, tiles = _tiles, fg = foreground_texture, bg = background_texture, objects = {} }
 	self.__index = self
 	return setmetatable(newRoom, self)
 end
 
-local function get_draw_pos(room)
-	local room_pos = room.position * tileSize - PlayerPos
+Paper = {}
+function Paper:new(_position, _id)
+	local newPaper = { position = _position * TileSize, id = _id }
+	self.__index = self
+	return setmetatable(newPaper, self)
+end
 
-	room_pos.x = room_pos.x + GameWidth / 2
-	room_pos.y = room_pos.y + GameHeight / 2
+function Paper:Draw()
+	local paper_pos = self.position - PlayerPos
+	love.graphics.draw(Textures.paper, paper_pos.x + DefaultOffsetX, paper_pos.y + DefaultOffsetY)
+end
+
+function Room:addObject(object)
+	if self.objects == nil then
+		local new_objects = { object }
+		self.objects = new_objects
+	else
+		table.insert(self.objects, object)
+	end
+end
+
+local function get_draw_pos(room)
+	local room_pos = room.position * TileSize - PlayerPos
+
+	room_pos.x = room_pos.x + DefaultOffsetX
+	room_pos.y = room_pos.y + DefaultOffsetY
 	return room_pos
 end
 
@@ -24,6 +42,12 @@ end
 function Room:Draw()
 	local room_pos = get_draw_pos(self)
 	love.graphics.draw(self.fg, room_pos.x, room_pos.y)
+
+	for key, object in pairs(self.objects) do
+		if object.position ~= nil then
+			object:Draw()
+		end
+	end
 end
 
 Rooms = {}
@@ -37,7 +61,7 @@ end
 
 
 function GetTileIndex(room, position)
-	local tile_position = position / tileSize
+	local tile_position = position / TileSize
 	tile_position.x = math.ceil(tile_position.x) - room.position.x
 	tile_position.y = math.ceil(tile_position.y) - room.position.y
 	return tile_position
@@ -91,6 +115,9 @@ function LoadRooms()
 		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1 },
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
 	}, Vector.new(-20, 0), getFg(2), getBg(2))
+	Rooms.first_room:addObject(Paper:new(Vector.new(-2, 17), "loga"))
+	Rooms.first_room:addObject(Paper:new(Vector.new(-8, 17), "loga"))
+	Rooms.first_room:addObject(Paper:new(Vector.new(-12, 17), "loga"))
 
 	Rooms.second_room = Room:new({
 		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, },
@@ -114,7 +141,6 @@ function LoadRooms()
 		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, },
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, }
 	}, Vector.new(-40, 0), getFg(3), getBg(3))
-
 
 	Rooms.left_center = Room:new({
 		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, },
@@ -187,26 +213,26 @@ function LoadRooms()
 	}, Vector.new(0, -20), getFg(6), getBg(6))
 
 	Rooms.left_top = Room:new({
-		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
-		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, },
-		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, },
+		{ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,       1, 1, 1, 1, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 0, },
+		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 0, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 0, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 0, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,       0, 0, 0, 0, 1, },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, "door2", 0, 0, 0, 0, 1, },
+		{ 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1,       1, 1, 1, 1, 1, },
 	}, Vector.new(-40, -40), getFg(7), getBg(7))
 
 	Rooms.center_top = Room:new({

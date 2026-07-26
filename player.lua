@@ -1,10 +1,10 @@
 PlayerPos = Vector.new(0, 0)
 
-PlayerSpeed = 10
+PlayerSpeed = 5
 
 local velocity = Vector.new(0, 0)
-local gravity = 5
-local drag = 3
+local gravity = 2.5
+local drag = 1.5
 
 function Player_Draw()
 	local draw_x = GameWidth / 2 - 16
@@ -81,7 +81,7 @@ function PlayerUpdate(dt)
 	end
 	velocity.x = velocity.x * (1 - drag * dt)
 	velocity.y = velocity.y * (1 - drag * dt)
-	MoveX(velocity.x * dt * 40)
-	MoveY(velocity.y * dt * 40)
+	MoveX(velocity.x * dt * 20)
+	MoveY(velocity.y * dt * 20)
 	CheckNewRoom()
 end

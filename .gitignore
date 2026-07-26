@@ -4,3 +4,4 @@ node_modules/
 **.love
 **bg*.png
 **fg*.png
+**.pattern

@@ -1,4 +1,6 @@
-local countdown_length = 30
+local base_countdown_length = 20
+local countdown_length = base_countdown_length
+local battery_capacity = 1
 local time = countdown_length
 local window_flags = { vsync = 1, resizable = true }
 
@@ -13,6 +15,7 @@ require("input")
 require("door")
 require("vectors")
 require("paper")
+require("battery")
 require("map")
 require("player")
 require("prompt")
@@ -26,10 +29,22 @@ LogUnlocks = {}
 Unlocks.base_open = false
 
 
+local textTimerObject = nil
+
 AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
 AsepriteFont:setLineHeight(1.2)
 local low_res_canvas
+
+function AddBattery()
+	battery_capacity = battery_capacity + 1
+	countdown_length = base_countdown_length + battery_capacity * 10
+end
+
+local function drawUi()
+	textTimerObject:set("Battery: " .. math.ceil(time))
+	love.graphics.draw(textTimerObject, 8, 8)
+end
 
 function love.draw()
 	love.graphics.setCanvas(low_res_canvas)
@@ -48,6 +63,7 @@ function love.draw()
 	elseif Outputting then
 		OutputDraw(dt)
 	end
+	drawUi()
 
 	love.graphics.setCanvas()
 	love.graphics.clear(0, 0, 0)
@@ -56,6 +72,7 @@ function love.draw()
 end
 
 function love.load()
+	textTimerObject = love.graphics.newText(AsepriteFont, "hi")
 	love.window.setMode(GameWidth * 3, GameHeight * 3, window_flags)
 	love.graphics.setDefaultFilter("nearest", "nearest", 0)
 	Textures.tile_a = love.graphics.newImage("textures/cookies.png")
@@ -65,6 +82,7 @@ function love.load()
 	Textures.prompt = love.graphics.newImage("textures/prompt.png")
 	Textures.outputbg = love.graphics.newImage("textures/outputbg.png")
 	Textures.paper = love.graphics.newImage("textures/paper.png")
+	Textures.battery = love.graphics.newImage("textures/battery.png")
 
 	local roomCount = 9
 	for i = 1, roomCount do
@@ -88,7 +106,21 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function love.update(dt)
+	if CurrentRoom == Rooms.base then
+		time = countdown_length
+	end
 	time = time - dt
+	if time < 0 then
+		print("died")
+		PlayerPos = Vector.new(64, 64)
+		SetVelocity(Vector.new(0, 0))
+
+		for key, object in pairs(HoldingObjects) do
+			table.insert(object.room.objects, object)
+			object:Reset()
+		end
+		HoldingObjects = {}
+	end
 	if Prompting then
 		PromptUpdate(dt)
 	elseif Outputting then

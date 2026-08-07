@@ -7,14 +7,18 @@ PickupDistance = 12 * 12 -- Uses distance squared because square roots are bad
 local velocity = Vector.new(0, 0)
 local gravity = 2.5
 local drag = 1.5
-local holding_objects = {}
+HoldingObjects = {}
 local object_offset = Vector.new(TileSize / 2, TileSize / 2)
+local flipped = 1
 
 function Player_Draw()
-	local draw_x = GameWidth / 2 - 16
-	local draw_y = GameHeight / 2 - 16
-	love.graphics.draw(Textures.player, draw_x, draw_y)
-	for key, value in pairs(holding_objects) do
+	local draw_x = GameWidth / 2
+	local draw_y = GameHeight / 2
+	if velocity.x ~= 0 then
+		flipped = (math.abs(velocity.x) == velocity.x) and -1 or 1
+	end
+	love.graphics.draw(Textures.player, draw_x, draw_y, 0, flipped, 1, 16, 16)
+	for key, value in pairs(HoldingObjects) do
 		value:Draw()
 	end
 end
@@ -46,13 +50,16 @@ local function get_collider()
 end
 
 local function StoreItems()
-	for key, object in pairs(holding_objects) do
+	for key, object in pairs(HoldingObjects) do
 		if object.id ~= nil and type(object.id) == "string" then
 			LogUnlocks[object.id] = true
 			print("Adds to log " .. object.id)
 		end
+		if object.is_battery ~= nil then
+			AddBattery()
+		end
 	end
-	holding_objects = {}
+	HoldingObjects = {}
 end
 
 function MoveX(amount)
@@ -60,6 +67,7 @@ function MoveX(amount)
 	PlayerPos.x = PlayerPos.x + amount
 	local collider = get_collider()
 	if collider == 1 then
+		velocity.x = 0
 		PlayerPos.x = last_position
 	elseif type(collider) == "string" then
 		if collider == "comp" then
@@ -79,6 +87,7 @@ function MoveY(amount)
 	local collider = get_collider()
 	if collider == 1 then
 		PlayerPos.y = last_position
+		velocity.y = 0
 	elseif type(collider) == "string" then
 		-- TODO check for papers here
 		Prompt(collider)
@@ -144,7 +153,7 @@ function PlayerUpdate(dt)
 			local dist = Vector.distance_squared_to(object.position + object_offset, PlayerPos)
 			if dist < PickupDistance then
 				table.remove(CurrentRoom.objects, key)
-				table.insert(holding_objects, object)
+				table.insert(HoldingObjects, object)
 			end
 		end
 		if object.width ~= nil then
@@ -153,7 +162,7 @@ function PlayerUpdate(dt)
 			end
 		end
 	end
-	for key, object in pairs(holding_objects) do
+	for key, object in pairs(HoldingObjects) do
 		if object.position ~= nil then
 			object.position = Vector.lerp(object.position, PlayerPos - object_offset, dt * 3 * (1 + key))
 		end

@@ -54,6 +54,10 @@ function PromptLoad()
 		Unlocks.base_open = true
 		Notify("Opening!")
 	end
+	outputs.shortcutsesa = function()
+		Unlocks.shortcut = true
+		Notify("Open sesame!")
+	end
 
 	-- Fun
 	outputs.comphiya = function() Notify("Hiiii!") end

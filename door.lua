@@ -11,10 +11,17 @@ function Door:new(x, y, width, height, unlock)
 		y = y * TileSize,
 		width = width * TileSize,
 		height = height * TileSize,
-		unlock = unlock
+		unlock = unlock,
+		init_pos_x = x * TileSize,
+		init_pos_y = y * TileSize,
 	}
 	setmetatable(door, Door)
 	return door
+end
+
+function Door:Reset()
+	self.x = self.init_pos_x
+	self.y = self.init_pos_y
 end
 
 function Door:Draw()

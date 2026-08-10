@@ -6,11 +6,13 @@ local window_flags = { vsync = 1, resizable = true }
 
 GameWidth = 320
 GameHeight = 180
+GameAspect = 320 / 180
 DefaultOffsetX = GameWidth / 2
 DefaultOffsetY = GameHeight / 2
 TileSize = 16
 
-local love = require("love")
+love = require("love")
+
 require("input")
 require("door")
 require("vectors")
@@ -28,8 +30,7 @@ Unlocks = {}
 LogUnlocks = {}
 Unlocks.base_open = false
 
-
-local textTimerObject = nil
+local textTimerObject
 
 AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
@@ -48,11 +49,7 @@ end
 
 function love.draw()
 	love.graphics.setCanvas(low_res_canvas)
-	love.graphics.clear(0, 0, 0)
-
-	love.graphics.print("Hello World!", 400, 300)
-	love.graphics.print("You have " .. math.floor(time) .. " seconds left!", 400, 350)
-
+	love.graphics.clear(2 / 255, 24 / 255, 15 / 255)
 
 	Room.DrawBg(CurrentRoom)
 	Player_Draw()
@@ -68,6 +65,11 @@ function love.draw()
 	love.graphics.setCanvas()
 	love.graphics.clear(0, 0, 0)
 	local win_width, win_height = love.graphics.getDimensions()
+	if win_height > win_width / GameAspect then
+		win_height = win_width / GameAspect
+	else
+		win_width = win_height * GameAspect
+	end
 	love.graphics.draw(low_res_canvas, 0, 0, 0, win_width / GameWidth, win_height / GameHeight)
 end
 
@@ -111,11 +113,10 @@ function love.update(dt)
 	end
 	time = time - dt
 	if time < 0 then
-		print("died")
 		PlayerPos = Vector.new(64, 64)
 		SetVelocity(Vector.new(0, 0))
 
-		for key, object in pairs(HoldingObjects) do
+		for _, object in pairs(HoldingObjects) do
 			table.insert(object.room.objects, object)
 			object:Reset()
 		end

@@ -40,10 +40,13 @@ local function get_collider()
 		end
 	end
 	return tile_collision
-	--	if tile_collision ~= nil and tile_collision ~= 0 then
-	--		return 1
-	--	end
-	--	return 0
+end
+
+function Release()
+	if not Outputting and not Prompting then
+		MoveY(-11)
+		SetVelocity(Vector.new(0, -2))
+	end
 end
 
 local function StoreItems()
@@ -86,6 +89,9 @@ function MoveY(amount)
 		PlayerPos.y = last_position
 		velocity.y = 0
 	elseif type(collider) == "string" then
+		if collider == "comp" then
+			StoreItems()
+		end
 		-- TODO check for papers here
 		Prompt(collider)
 	end

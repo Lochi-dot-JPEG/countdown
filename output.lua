@@ -5,29 +5,38 @@ local textObject = nil
 local drawPosX = GameWidth / 2 - 48
 local drawPosY = GameHeight / 2 - 48
 
+local messageQueue = {}
+
 function OutputsLoad()
 	textObject = love.graphics.newText(AsepriteFont, "output")
 end
 
-local function finishOutput()
-	Outputting = false
-	MoveY(-11)
-	SetVelocity(Vector.new(0, -2))
+local function updateOutput()
+	if #messageQueue == 0 then
+		Outputting = false
+		Release()
+	else
+		if textObject ~= nil then
+			textObject:set(table.remove(messageQueue, #messageQueue))
+		end
+	end
 end
 
-function OutputKeypressed(key, scancode, isrepeat)
+function OutputKeypressed(key, _, _)
 	if not Outputting then
 		return
 	end
 	if key == "return" then
-		finishOutput()
+		updateOutput()
 	end
 end
 
 function Notify(_text)
 	Outputting = true
 	print("notifies")
-	textObject:set(_text)
+	table.insert(messageQueue, _text)
+
+	updateOutput()
 end
 
 function OutputUpdate(dt) end

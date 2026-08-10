@@ -23,18 +23,14 @@ local function listClues()
 end
 
 local logs = {
-	loga =
-	"I left all of my thoughts\ndown on notes like this one\n. If anyone finds them, use\nthem to navigate this place.",
+	loga = "I left all of my thoughts\ndown on notes like this one\n. If anyone finds them, use\nthem to navigate this place.",
 	logb = "I coded that door wrong.\nInstead of opening it have to \nSHUT it :(",
 
-	logc =
-	"I built some murder drones\nto chase down any other murder\n drones that come in. \nI hope they don't \nTURN against me.",
+	logc = "I built some murder drones\nto chase down any other murder\n drones that come in. \nI hope they don't \nTURN against me.",
 
-	logd =
-	"Up above me, I create\na really strong password on the\nwall to keep my colleagues out\nof getting into the top lab.",
+	logd = "Up above me, I create\na really strong password on the\nwall to keep my colleagues out\nof getting into the top lab.",
 
-	loge =
-	"This little shortcut opens when I input\nopen SESAme.",
+	loge = "This little shortcut opens when I input\nopen SESAme.",
 }
 
 local function showClue(name)
@@ -45,11 +41,21 @@ end
 
 function PromptLoad()
 	-- Tutorial
-	outputs.complist = function() Notify(listClues()) end
-	outputs.comphelp = function() Notify("Did you need a CLUE?") end
-	outputs.compclue = function() Notify("The door is broken.\nMaybe SHUTting it might\ndo something.") end
-	outputs.compman = function() Notify("this isn't a real terminal") end
-	outputs.compls = function() Notify(listClues()) end
+	outputs.complist = function()
+		Notify(listClues())
+	end
+	outputs.comphelp = function()
+		Notify("Did you need a CLUE?")
+	end
+	outputs.compclue = function()
+		Notify("The door is broken.\nMaybe SHUTting it might\ndo something.")
+	end
+	outputs.compman = function()
+		Notify("this isn't a real terminal")
+	end
+	outputs.compls = function()
+		Notify(listClues())
+	end
 	outputs.bdoorshut = function()
 		Unlocks.base_open = true
 		Notify("Opening!")
@@ -60,15 +66,29 @@ function PromptLoad()
 	end
 
 	-- Fun
-	outputs.comphiya = function() Notify("Hiiii!") end
-	outputs.compturn = function() Notify("Turn what?") end
+	outputs.comphiya = function()
+		Notify("Hiiii!")
+	end
+	outputs.compturn = function()
+		Notify("Turn what?")
+	end
 
 	-- Logs
-	outputs.comploga = function() showClue("loga") end
-	outputs.complogb = function() showClue("logb") end
-	outputs.complogc = function() showClue("logc") end
-	outputs.complogd = function() showClue("logd") end
-	outputs.comploge = function() showClue("loge") end
+	outputs.comploga = function()
+		showClue("loga")
+	end
+	outputs.complogb = function()
+		showClue("logb")
+	end
+	outputs.complogc = function()
+		showClue("logc")
+	end
+	outputs.complogd = function()
+		showClue("logd")
+	end
+	outputs.comploge = function()
+		showClue("loge")
+	end
 
 	-- Level Computers
 
@@ -103,27 +123,28 @@ function love.textinput(t)
 	end
 end
 
-local function Release()
-	Prompting = false
-	MoveY(-11)
-	SetVelocity(Vector.new(0, -2))
+function Release()
+	if not Outputting and not Prompting then
+		MoveY(-11)
+		SetVelocity(Vector.new(0, -2))
+	end
 end
 
 local function SubmitCode()
 	local attempt = string.lower(promptType .. typedText)
 	print("Attempted " .. attempt)
 	local attemptResult = outputs[attempt]
+	Prompting = false
 	if attemptResult == nil then
+		if typedText ~= "" then
+			Notify("Command not found")
+		end
 		Release()
 		return
 	end
 	attemptResult()
-	if not Outputting then
-		Release()
-	end
-	Prompting = false
+	Release()
 end
-
 
 function PromptUpdate(dt) end
 

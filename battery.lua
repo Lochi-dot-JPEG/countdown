@@ -4,9 +4,8 @@ function Battery:new(_position, room)
 		is_battery = true,
 		init_pos = _position * TileSize,
 		position = _position * TileSize,
-		id = _id,
-		room =
-		    room
+		--id = _id,
+		room = room,
 	}
 	self.__index = self
 	return setmetatable(newBattery, self)

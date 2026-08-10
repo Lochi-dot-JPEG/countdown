@@ -14,11 +14,8 @@ local flipped = 1
 function Player_Draw()
 	local draw_x = GameWidth / 2
 	local draw_y = GameHeight / 2
-	if velocity.x ~= 0 then
-		flipped = (math.abs(velocity.x) == velocity.x) and -1 or 1
-	end
 	love.graphics.draw(Textures.player, draw_x, draw_y, 0, flipped, 1, 16, 16)
-	for key, value in pairs(HoldingObjects) do
+	for _, value in pairs(HoldingObjects) do
 		value:Draw()
 	end
 end
@@ -34,7 +31,7 @@ end
 local function get_collider()
 	local tile_collision = GetTile(CurrentRoom, PlayerPos)
 	if tile_collision == 0 then
-		for key, object in pairs(CurrentRoom.objects) do
+		for _, object in pairs(CurrentRoom.objects) do
 			if object.width ~= nil then
 				if object:ContainsPoint(PlayerPos) then
 					return 1
@@ -50,10 +47,10 @@ local function get_collider()
 end
 
 local function StoreItems()
-	for key, object in pairs(HoldingObjects) do
+	for _, object in pairs(HoldingObjects) do
 		if object.id ~= nil and type(object.id) == "string" then
 			LogUnlocks[object.id] = true
-			print("Adds to log " .. object.id)
+			Notify("Adds log\n" .. object.id)
 		end
 		if object.is_battery ~= nil then
 			AddBattery()
@@ -128,6 +125,7 @@ local function GetRoom()
 end
 
 function PlayerUpdate(dt)
+	local net_horizontal = 0
 	if input_pressed(Inputs.down) then
 		accel_y(dt * PlayerSpeed)
 	end
@@ -138,10 +136,16 @@ function PlayerUpdate(dt)
 	end
 	if input_pressed(Inputs.left) then
 		accel_x(-dt * PlayerSpeed)
+		net_horizontal = 1
 	end
 	if input_pressed(Inputs.right) then
 		accel_x(dt * PlayerSpeed)
+		net_horizontal = net_horizontal - 1
 	end
+	if net_horizontal ~= 0 then
+		flipped = net_horizontal
+	end
+
 	velocity.x = velocity.x * (1 - drag * dt)
 	velocity.y = velocity.y * (1 - drag * dt)
 	MoveX(velocity.x * dt * 20)

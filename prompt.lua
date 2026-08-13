@@ -23,14 +23,17 @@ local function listClues()
 end
 
 local logs = {
-	loga = "I left all of my thoughts\ndown on notes like this one\n. If anyone finds them, use\nthem to navigate this place.",
-	logb = "I coded that door wrong.\nInstead of opening it have to \nSHUT it :(",
+	loga =
+	"I left all of my thoughts\ndown on notes like this one\n. If anyone finds them, use\nthem to navigate this place.",
+	logb = "My drone army is complete!\nI hope they don't \nTURN against me.",
 
-	logc = "I built some murder drones\nto chase down any other murder\n drones that come in. \nI hope they don't \nTURN against me.",
+	logc =
+	"Up above me, I create\na really strong password on the\nwall to keep my colleagues out\nof getting into the top lab.",
 
-	logd = "Up above me, I create\na really strong password on the\nwall to keep my colleagues out\nof getting into the top lab.",
+	logd =
+	"This little shortcut opens when I input\nopen SESAme.",
 
-	loge = "This little shortcut opens when I input\nopen SESAme.",
+	loge = "The entrance to the\nvault is very secure.\nNobody will ever Pass.",
 }
 
 local function showClue(name)
@@ -60,10 +63,6 @@ function PromptLoad()
 		Unlocks.base_open = true
 		Notify("Opening!")
 	end
-	outputs.shortcutsesa = function()
-		Unlocks.shortcut = true
-		Notify("Open sesame!")
-	end
 
 	-- Fun
 	outputs.comphiya = function()
@@ -91,6 +90,18 @@ function PromptLoad()
 	end
 
 	-- Level Computers
+	outputs.door2spin = function()
+		Unlocks.symbolsdoor = true
+		Notify("Door opening...")
+	end
+	outputs.shortcutpass = function()
+		Unlocks.enddoor = true
+		Notify("Door opening...")
+	end
+	outputs.shortcutsesa = function()
+		Unlocks.shortcut = true
+		Notify("Open sesame!")
+	end
 
 	textObject = love.graphics.newText(AsepriteFont, "hi")
 end
@@ -120,13 +131,6 @@ function love.textinput(t)
 	if string.len(typedText) < 4 then
 		typedText = typedText .. t
 		typedText = string.lower(typedText)
-	end
-end
-
-function Release()
-	if not Outputting and not Prompting then
-		MoveY(-11)
-		SetVelocity(Vector.new(0, -2))
 	end
 end
 

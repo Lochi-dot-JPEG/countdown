@@ -1,4 +1,4 @@
---PlayerPos = Vector.new(32 - 320, 32)
+--PlayerPos = Vector.new(32 - 420, 32)
 PlayerPos = Vector.new(32, 32)
 
 PlayerSpeed = 20
@@ -56,10 +56,11 @@ local function StoreItems()
 	for _, object in pairs(HoldingObjects) do
 		if object.id ~= nil and type(object.id) == "string" then
 			LogUnlocks[object.id] = true
-			Notify("Adds log\n" .. object.id)
+			Notify("Adds log " .. object.id)
 		end
 		if object.is_battery ~= nil then
 			AddBattery()
+			Notify("Adds battery. ")
 		end
 	end
 	HoldingObjects = {}
@@ -70,7 +71,7 @@ function MoveX(amount)
 	PlayerPos.x = PlayerPos.x + amount
 	local collider = get_collider()
 	if collider == 1 then
-		velocity.x = -velocity.x
+		velocity.x = -velocity.x * 0.7
 		PlayerPos.x = last_position
 		Collide()
 	elseif type(collider) == "string" then
@@ -92,7 +93,7 @@ function MoveY(amount)
 	if collider == 1 then
 		PlayerPos.y = last_position
 		Collide()
-		velocity.y = -velocity.y
+		velocity.y = -velocity.y * 0.7
 	elseif type(collider) == "string" then
 		if collider == "comp" then
 			StoreItems()

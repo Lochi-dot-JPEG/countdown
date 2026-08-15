@@ -39,7 +39,7 @@ local textTimerObject
 
 AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
-AsepriteFont:setLineHeight(1.2)
+AsepriteFont:setLineHeight(1.5)
 local low_res_canvas
 
 function Flash(flash_time, r, g, b)
@@ -148,7 +148,7 @@ function love.update(dt)
 	end
 	time = time - dt
 	if time < 0 then
-		batteryDead()
+		BatteryDead()
 	end
 	if Outputting then
 		OutputUpdate(dt)

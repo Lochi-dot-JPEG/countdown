@@ -24,16 +24,17 @@ end
 
 local logs = {
 	loga =
-	"I left all of my thoughts\ndown on notes like this one\n. If anyone finds them, use\nthem to navigate this place.",
-	logb = "My drone army is complete!\nI hope they don't \nTURN against me.",
+	"I left all of my thoughts down on notes like this one . If anyone finds them, use them to navigate this place.",
+	logb = "My drone army is complete! I hope they don't  TURN against me.",
 
 	logc =
-	"Up above me, I create\na really strong password on the\nwall to keep my colleagues out\nof getting into the top lab.",
+	"Up above me, I create a really strong password on the wall to keep my colleagues out of getting into the top lab.",
 
 	logd =
-	"This little shortcut opens when I input\nopen SESAme.",
+	"This little shortcut opens when I input open SESAme.",
 
-	loge = "The entrance to the\nvault is very secure.\nNobody will ever Pass.",
+	loge = "The entrance to the vault is very secure. Nobody will ever PASS.",
+	logf = "I evaded the drones but now I'm closing off this lab forever. Finally FREE.",
 }
 
 local function showClue(name)
@@ -51,7 +52,7 @@ function PromptLoad()
 		Notify("Did you need a CLUE?")
 	end
 	outputs.compclue = function()
-		Notify("The door is broken.\nMaybe SHUTting it might\ndo something.")
+		Notify("The door is broken.\nMaybe SHUTting it before\nOPENing it might do\nsomething.")
 	end
 	outputs.compman = function()
 		Notify("this isn't a real terminal")
@@ -59,9 +60,15 @@ function PromptLoad()
 	outputs.compls = function()
 		Notify(listClues())
 	end
-	outputs.bdoorshut = function()
-		Unlocks.base_open = true
+	outputs.bdooropen = function()
+		if Unlocks.unstuck == true then
+			Unlocks.base_open = true
+		end
 		Notify("Opening!")
+	end
+	outputs.bdoorshut = function()
+		Unlocks.unstuck = true
+		Notify("It looks less stuck.")
 	end
 
 	-- Fun
@@ -90,7 +97,7 @@ function PromptLoad()
 	end
 
 	-- Level Computers
-	outputs.door2spin = function()
+	outputs.door2arms = function()
 		Unlocks.symbolsdoor = true
 		Notify("Door opening...")
 	end
@@ -101,6 +108,11 @@ function PromptLoad()
 	outputs.shortcutsesa = function()
 		Unlocks.shortcut = true
 		Notify("Open sesame!")
+	end
+	outputs.freefree = function()
+		Unlocks.free = true
+		Notify("The window slides open!")
+		Notify("You are finally free.")
 	end
 
 	textObject = love.graphics.newText(AsepriteFont, "hi")

@@ -4,6 +4,9 @@ PlayerPos = Vector.new(32, 32)
 PlayerSpeed = 20
 PickupDistance = 12 * 12 -- Uses distance squared because square roots are bad
 
+PLAYER_MAX_HP = 5.0
+PlayerHp = PLAYER_MAX_HP
+
 local velocity = Vector.new(0, 0)
 local gravity = 2.5
 local drag = 1.5
@@ -67,8 +70,9 @@ function MoveX(amount)
 	PlayerPos.x = PlayerPos.x + amount
 	local collider = get_collider()
 	if collider == 1 then
-		velocity.x = 0
+		velocity.x = -velocity.x
 		PlayerPos.x = last_position
+		Collide()
 	elseif type(collider) == "string" then
 		if collider == "comp" then
 			StoreItems()
@@ -87,7 +91,8 @@ function MoveY(amount)
 	local collider = get_collider()
 	if collider == 1 then
 		PlayerPos.y = last_position
-		velocity.y = 0
+		Collide()
+		velocity.y = -velocity.y
 	elseif type(collider) == "string" then
 		if collider == "comp" then
 			StoreItems()
@@ -130,7 +135,16 @@ local function GetRoom()
 	return Rooms.base
 end
 
+function Collide()
+	PlayerHp = PlayerHp - 1
+	--if math.abs(velocity.x) > 10 or math.abs(velocity.y) > 10 then
+	--end
+end
+
 function PlayerUpdate(dt)
+	if PlayerHp <= 0 then
+		BatteryDead()
+	end
 	local net_horizontal = 0
 	if input_pressed(Inputs.down) then
 		accel_y(dt * PlayerSpeed)

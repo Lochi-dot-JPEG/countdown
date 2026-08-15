@@ -43,7 +43,9 @@ function AddBattery()
 end
 
 local function drawUi()
-	textTimerObject:set("Battery: " .. math.ceil(time))
+	local newstatus = "Battery: " ..
+	    math.ceil(time) .. "\nHull integrity: " .. math.floor(PlayerHp / PLAYER_MAX_HP * 100) .. "%"
+	textTimerObject:set(newstatus)
 	love.graphics.draw(textTimerObject, 8, 8)
 end
 
@@ -107,8 +109,9 @@ function love.keypressed(key, scancode, isrepeat)
 	end
 end
 
-local function batteryDead()
+function BatteryDead()
 	PlayerPos = Vector.new(64, 64)
+	PlayerHp = PLAYER_MAX_HP
 	SetVelocity(Vector.new(0, 0))
 
 	for _, object in pairs(HoldingObjects) do

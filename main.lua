@@ -13,6 +13,11 @@ TileSize = 16
 
 love = require("love")
 
+local flash = 0
+local flashColorR = 255
+local flashColorG = 255
+local flashColorB = 255
+
 require("input")
 require("door")
 require("vectors")
@@ -36,6 +41,13 @@ AsepriteFont = love.graphics.newFont("textures/aseprite.otf/aseprite.otf", 7)
 
 AsepriteFont:setLineHeight(1.2)
 local low_res_canvas
+
+function Flash(flash_time, r, g, b)
+	flash = flash_time
+	flashColorR = r
+	flashColorG = g
+	flashColorB = b
+end
 
 function AddBattery()
 	battery_capacity = battery_capacity + 1
@@ -63,6 +75,12 @@ function love.draw()
 		PromptDraw()
 	end
 	drawUi()
+
+	if flash > 0 then
+		love.graphics.setColor(flashColorR, flashColorB, flashColorG, flash * 3)
+		love.graphics.rectangle("fill", 0, 0, GameWidth, GameHeight)
+		love.graphics.setColor(1, 1, 1)
+	end
 
 	love.graphics.setCanvas()
 	love.graphics.clear(0, 0, 0)
@@ -122,6 +140,9 @@ function BatteryDead()
 end
 
 function love.update(dt)
+	if flash > 0 then
+		flash = flash - dt
+	end
 	if CurrentRoom == Rooms.base then
 		time = countdown_length
 	end

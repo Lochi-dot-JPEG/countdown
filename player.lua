@@ -137,8 +137,7 @@ end
 
 function Collide()
 	PlayerHp = PlayerHp - 1
-	--if math.abs(velocity.x) > 10 or math.abs(velocity.y) > 10 then
-	--end
+	Flash(0.2, 0.8, 0.8, 0.8)
 end
 
 function PlayerUpdate(dt)

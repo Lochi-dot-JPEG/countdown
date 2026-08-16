@@ -14,17 +14,20 @@ local promptDrawPosY = DefaultOffsetY - 16 - 60
 local outputs = {}
 
 local function listClues()
+	if next(LogUnlocks) == nil then
+		return "No logs collected."
+	end
 	local output = "Entries:"
-
-	for key, value in pairs(LogUnlocks) do
+	for key, _ in pairs(LogUnlocks) do
 		output = output .. "\n- " .. string.upper(key)
 	end
+	output = output .. "\nEnter one of these into the base computer."
 	return output
 end
 
 local logs = {
 	loga =
-	"I left all of my thoughts down on notes like this one . If anyone finds them, use them to navigate this place.",
+	"I left all of my thoughts down on notes like this one. If anyone finds them, use them to navigate this place.",
 	logb = "My drone army is complete! I hope they don't  TURN against me.",
 
 	logc =
@@ -52,7 +55,7 @@ function PromptLoad()
 		Notify("Did you need a CLUE?")
 	end
 	outputs.compclue = function()
-		Notify("The door is broken.\nMaybe SHUTting it before\nOPENing it might do\nsomething.")
+		Notify("The door is broken. Maybe SHUTting it before OPENing it might do something.")
 	end
 	outputs.compman = function()
 		Notify("this isn't a real terminal")

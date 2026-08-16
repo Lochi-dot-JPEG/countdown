@@ -11,11 +11,14 @@
 - [x] Viewing logs
 - [x] Failure on time running out
 - [x] Unlockable batteries
-- [ ] Fail animation
-- [ ] Damage and knock back on walls
+- [x] Damage and knock back on walls
+- [x] Fix the message queue system
+- [ ] Complete progression
 - [ ] Sound
-- [ ] Cable inside the base
-- [ ] Consider changing logs to photos
+- [ ] Fail animation
+- [ ] Make sure all notes are relevant
+- [ ] Scary light, possibly directional
+- [ ] Enemies
 
 ## AI Usage
 

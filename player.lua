@@ -52,17 +52,37 @@ function Release()
 	end
 end
 
-local function StoreItems()
+local function OnEnterBaseComp()
+	if PlayerHp ~= PLAYER_MAX_HP then
+		Notify("> Frame repaired.")
+	end
+	PlayerHp = PLAYER_MAX_HP
+	local added_logs = {}
+	local added_batteries = 0
 	for _, object in pairs(HoldingObjects) do
 		if object.id ~= nil and type(object.id) == "string" then
 			LogUnlocks[object.id] = true
-			Notify("Adds log " .. object.id)
+			table.insert(added_logs, object.id)
 		end
 		if object.is_battery ~= nil then
 			AddBattery()
-			Notify("Adds battery. ")
+			added_batteries = added_batteries + 1
 		end
 	end
+
+	if added_batteries > 1 then
+		Notify("> Adds " .. added_batteries .. " batteries")
+	elseif added_batteries > 0 then
+		Notify("> Adds battery")
+	end
+	if #added_logs ~= 0 then
+		local logmsg = ""
+		for i = 1, #added_logs do
+			logmsg = logmsg .. "> Adds log " .. added_logs[i] .. "\n"
+		end
+		Notify(logmsg)
+	end
+
 	HoldingObjects = {}
 end
 
@@ -76,7 +96,7 @@ function MoveX(amount)
 		Collide()
 	elseif type(collider) == "string" then
 		if collider == "comp" then
-			StoreItems()
+			OnEnterBaseComp()
 		end
 		Prompt(collider)
 	end
@@ -96,7 +116,7 @@ function MoveY(amount)
 		velocity.y = -velocity.y * 0.7
 	elseif type(collider) == "string" then
 		if collider == "comp" then
-			StoreItems()
+			OnEnterBaseComp()
 		end
 		-- TODO check for papers here
 		Prompt(collider)

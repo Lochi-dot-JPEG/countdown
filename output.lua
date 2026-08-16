@@ -39,7 +39,7 @@ local function nextOutput()
 
 	if textObject ~= nil then
 		Outputting = true
-		local new_message = table.remove(messageQueue, #messageQueue)
+		local new_message = table.remove(messageQueue, 1)
 		new_message = wrap(new_message, 28)
 		textObject:set(new_message)
 	end

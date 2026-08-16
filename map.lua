@@ -186,7 +186,7 @@ function LoadRooms()
 	}, Vector.new(-20, -20), getFg(5), getBg(5))
 	Rooms.center_center:addObject(Door:new(7 - 20, 15 - 20, 4, 1, "shortcut"))
 	Rooms.center_center:addObject(Door:new(-1, -9, 1, 6, "enddoor"))
-	Rooms.center_center:addObject(Paper:new(Vector.new(-14, -6), "logd", Rooms.center_center))
+	Rooms.center_center:addObject(Paper:new(Vector.new(-14, -6), "loge", Rooms.center_center))
 
 	Rooms.right_center = Room:new({
 		{ 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1 },
@@ -260,7 +260,7 @@ function LoadRooms()
 		{ 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1 },
 	}, Vector.new(-20, -40), getFg(8), getBg(8))
 	Rooms.center_top:addObject(Battery:new(Vector.new(-16, -22), Rooms.center_top))
-	Rooms.center_top:addObject(Paper:new(Vector.new(-17, -35), "loge", Rooms.center_top))
+	Rooms.center_top:addObject(Paper:new(Vector.new(-17, -35), "logd", Rooms.center_top))
 
 	Rooms.right_top = Room:new({
 		{ 1, 1, 1, 1, 1, 1, 1, 1,      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 },

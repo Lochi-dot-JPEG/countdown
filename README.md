@@ -13,12 +13,10 @@
 - [x] Unlockable batteries
 - [x] Damage and knock back on walls
 - [x] Fix the message queue system
-- [ ] Complete progression
+- [x] Complete progression
 - [ ] Sound
-- [ ] Fail animation
-- [ ] Make sure all notes are relevant
-- [ ] Scary light, possibly directional
-- [ ] Enemies
+- [ ] Draw ending screen
+- [ ] Draw Battery out screen
 
 ## AI Usage
 

@@ -34,6 +34,7 @@ Textures = {}
 Unlocks = {}
 LogUnlocks = {}
 Unlocks.base_open = false
+Complete = false
 
 local textTimerObject
 
@@ -51,7 +52,7 @@ end
 
 function AddBattery()
 	battery_capacity = battery_capacity + 1
-	countdown_length = base_countdown_length + battery_capacity * 10
+	countdown_length = base_countdown_length + battery_capacity * 5
 end
 
 local function drawUi()
@@ -73,6 +74,10 @@ function love.draw()
 		OutputDraw(dt)
 	elseif Prompting then
 		PromptDraw()
+	elseif Complete then
+		love.graphics.setCanvas()
+		love.graphics.clear(0, 0, 0)
+		return
 	end
 	drawUi()
 
@@ -140,6 +145,9 @@ function BatteryDead()
 end
 
 function love.update(dt)
+	if Complete and not Outputting then
+		return
+	end
 	if flash > 0 then
 		flash = flash - dt
 	end

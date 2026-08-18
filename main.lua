@@ -35,6 +35,7 @@ Unlocks = {}
 LogUnlocks = {}
 Unlocks.base_open = false
 Complete = false
+Crashed = false
 
 local textTimerObject
 
@@ -56,28 +57,40 @@ function AddBattery()
 end
 
 local function drawUi()
-	local newstatus = "Battery: " ..
-	    math.ceil(time) .. "\nHull integrity: " .. math.floor(PlayerHp / PLAYER_MAX_HP * 100) .. "%"
+	local newstatus = "Battery: "
+		.. math.ceil(time)
+		.. "\nHull integrity: "
+		.. math.floor(PlayerHp / PLAYER_MAX_HP * 100)
+		.. "%"
 	textTimerObject:set(newstatus)
 	love.graphics.draw(textTimerObject, 8, 8)
+end
+local function DrawWorld()
+	Room.DrawBg(CurrentRoom)
+	Player_Draw()
+	Room.Draw(CurrentRoom)
 end
 
 function love.draw()
 	love.graphics.setCanvas(low_res_canvas)
 	love.graphics.clear(2 / 255, 24 / 255, 15 / 255)
 
-	Room.DrawBg(CurrentRoom)
-	Player_Draw()
-	Room.Draw(CurrentRoom)
+	if Crashed then
+		love.graphics.clear(0, 0, 0)
+	end
 
 	if Outputting then
+		DrawWorld()
 		OutputDraw(dt)
 	elseif Prompting then
+		DrawWorld()
 		PromptDraw()
 	elseif Complete then
-		love.graphics.setCanvas()
-		love.graphics.clear(0, 0, 0)
-		return
+		love.graphics.draw(Textures.ending, 87, 27)
+	elseif Crashed then
+		love.graphics.draw(Textures.crash, 87, 27)
+	else
+		DrawWorld()
 	end
 	drawUi()
 
@@ -110,6 +123,8 @@ function love.load()
 	Textures.outputbg = love.graphics.newImage("textures/outputbg.png")
 	Textures.paper = love.graphics.newImage("textures/paper.png")
 	Textures.battery = love.graphics.newImage("textures/battery.png")
+	Textures.ending = love.graphics.newImage("textures/screens2.png")
+	Textures.crash = love.graphics.newImage("textures/screens1.png")
 
 	local roomCount = 9
 	for i = 1, roomCount do
@@ -142,6 +157,7 @@ function BatteryDead()
 		object:Reset()
 	end
 	HoldingObjects = {}
+	Crashed = true
 end
 
 function love.update(dt)
@@ -151,12 +167,14 @@ function love.update(dt)
 	if flash > 0 then
 		flash = flash - dt
 	end
+	if Crashed then
+		if input_pressed(Inputs.continue) then
+			Crashed = false
+		end
+		return
+	end
 	if CurrentRoom == Rooms.base then
 		time = countdown_length
-	end
-	time = time - dt
-	if time < 0 then
-		BatteryDead()
 	end
 	if Outputting then
 		OutputUpdate(dt)
@@ -164,5 +182,9 @@ function love.update(dt)
 		PromptUpdate(dt)
 	else
 		PlayerUpdate(dt)
+		time = time - dt
+		if time < 0 then
+			BatteryDead()
+		end
 	end
 end

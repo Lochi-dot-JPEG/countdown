@@ -14,9 +14,9 @@
 - [x] Damage and knock back on walls
 - [x] Fix the message queue system
 - [x] Complete progression
+- [x] Draw ending screen
+- [x] Draw Battery out screen
 - [ ] Sound
-- [ ] Draw ending screen
-- [ ] Draw Battery out screen
 
 ## AI Usage
 

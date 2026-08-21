@@ -181,12 +181,14 @@ end
 
 function love.update(dt)
 	if Complete and not Outputting then
+		PlayerUpdateDroneSound(dt, false)
 		return
 	end
 	if flash > 0 then
 		flash = flash - dt
 	end
 	if Crashed then
+		PlayerUpdateDroneSound(dt, false)
 		if input_pressed(Inputs.continue) then
 			Crashed = false
 		end

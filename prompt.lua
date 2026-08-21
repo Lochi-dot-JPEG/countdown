@@ -29,10 +29,10 @@ local logs = {
 	loga =
 	"I left all of my thoughts down on notes like this one.\n If anyone finds them, use them to navigate this place.",
 	logb =
-	"My drone army is complete! \nMy design is a little delicate so I will avoid bumping into walls. \nI hope they don't TURN against me.",
+	"My drone is complete! \nMy design is a little delicate so I will need to avoid bumping into walls.",
 
 	logc =
-	"Up north, I created a really strong password on the wall to keep those drones out of getting into the top lab. Just in case you know.",
+	"Up north, I created a really strong password on the wall to keep those drones out of getting out.",
 	logd =
 	"This little shortcut opens when I input open SESAme so I can sneak around that drone.",
 	loge = "The entrance to the vault is very secure. Nobody will ever PASS.",

@@ -77,6 +77,6 @@ end
 function OutputDraw()
 	if Outputting then
 		love.graphics.draw(Textures.outputbg, drawPosX, drawPosY)
-		love.graphics.draw(textObject, drawPosX + 12, drawPosY + 12)
+		love.graphics.draw(textObject, drawPosX + 8, drawPosY + 8)
 	end
 end

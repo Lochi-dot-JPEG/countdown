@@ -129,6 +129,7 @@ function love.load()
 	Textures.ending = love.graphics.newImage("textures/screens2.png")
 	Textures.crash = love.graphics.newImage("textures/screens1.png")
 	Sounds.door = love.audio.newSource("sounds/door.wav", "static")
+	Sounds.tick = love.audio.newSource("sounds/tick.wav", "static")
 	Sounds.enter = love.audio.newSource("sounds/enter.wav", "static")
 	Sounds.enter:setVolume(0.3)
 	Sounds.type = love.audio.newSource("sounds/type.wav", "static")
@@ -203,7 +204,11 @@ function love.update(dt)
 		PromptUpdate(dt)
 	else
 		PlayerUpdate(dt)
+		local start = math.floor(time)
 		time = time - dt
+		if time < 10 and start ~= math.floor(time) then
+			love.audio.play(Sounds.tick)
+		end
 		if time < 0 then
 			BatteryDead()
 		end

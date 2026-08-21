@@ -26,3 +26,4 @@ No AI was used in this project.
 
 - Some code used from love2d docs including most of vectors.lua.
 - Aseprite font used under [CC.BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+- leather-bag-cloth-movement-5.wav by jarhead123 -- https://freesound.org/s/557401/ -- License: Attribution 3.0

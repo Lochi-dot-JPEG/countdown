@@ -30,6 +30,7 @@ require("output")
 
 CurrentRoom = nil
 Textures = {}
+Sounds = {}
 
 Unlocks = {}
 LogUnlocks = {}
@@ -58,10 +59,10 @@ end
 
 local function drawUi()
 	local newstatus = "Battery: "
-		.. math.ceil(time)
-		.. "\nHull integrity: "
-		.. math.floor(PlayerHp / PLAYER_MAX_HP * 100)
-		.. "%"
+	    .. math.ceil(time)
+	    .. "\nHull integrity: "
+	    .. math.floor(PlayerHp / PLAYER_MAX_HP * 100)
+	    .. "%"
 	textTimerObject:set(newstatus)
 	love.graphics.draw(textTimerObject, 8, 8)
 end
@@ -82,17 +83,19 @@ function love.draw()
 	if Outputting then
 		DrawWorld()
 		OutputDraw(dt)
+		drawUi()
 	elseif Prompting then
 		DrawWorld()
 		PromptDraw()
+		drawUi()
 	elseif Complete then
 		love.graphics.draw(Textures.ending, 87, 27)
 	elseif Crashed then
 		love.graphics.draw(Textures.crash, 87, 27)
 	else
 		DrawWorld()
+		drawUi()
 	end
-	drawUi()
 
 	if flash > 0 then
 		love.graphics.setColor(flashColorR, flashColorB, flashColorG, flash * 3)
@@ -125,6 +128,21 @@ function love.load()
 	Textures.battery = love.graphics.newImage("textures/battery.png")
 	Textures.ending = love.graphics.newImage("textures/screens2.png")
 	Textures.crash = love.graphics.newImage("textures/screens1.png")
+	Sounds.door = love.audio.newSource("sounds/door.wav", "static")
+	Sounds.enter = love.audio.newSource("sounds/enter.wav", "static")
+	Sounds.enter:setVolume(0.3)
+	Sounds.type = love.audio.newSource("sounds/type.wav", "static")
+	Sounds.type:setVolume(0.3)
+	Sounds.hurt = love.audio.newSource("sounds/hurt.wav", "static")
+	Sounds.die = love.audio.newSource("sounds/die.wav", "static")
+	Sounds.item = love.audio.newSource("sounds/item.wav", "static")
+	Sounds.ambience = love.audio.newSource("sounds/ambience.ogg", "static")
+	Sounds.ambience:setVolume(0.7)
+	Sounds.ambience:setLooping(true)
+	love.audio.play(Sounds.ambience)
+	Sounds.dronefly = love.audio.newSource("sounds/buzz.wav", "static")
+	Sounds.dronefly:setLooping(true)
+
 
 	local roomCount = 9
 	for i = 1, roomCount do
@@ -148,6 +166,7 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function BatteryDead()
+	love.audio.play(Sounds.die)
 	PlayerPos = Vector.new(64, 64)
 	PlayerHp = PLAYER_MAX_HP
 	SetVelocity(Vector.new(0, 0))

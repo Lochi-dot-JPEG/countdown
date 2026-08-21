@@ -45,8 +45,11 @@ local function showClue(name)
 	end
 end
 
+local function doorSound()
+	love.audio.play(Sounds.door)
+end
+
 function PromptLoad()
-	Unlocks.shortcut = true
 	-- Tutorial
 	outputs.complist = function()
 		Notify(listClues())
@@ -64,13 +67,20 @@ function PromptLoad()
 		Notify(listClues())
 	end
 	outputs.bdooropen = function()
-		if Unlocks.unstuck == true then
-			Unlocks.base_open = true
+		if not Unlocks.base_open then
+			if Unlocks.unstuck then
+				Unlocks.base_open = true
+				Notify("Opening!")
+				doorSound()
+			else
+				Notify("It looks stuck.")
+			end
 		end
-		Notify("Opening!")
 	end
 	outputs.bdoorshut = function()
-		Unlocks.unstuck = true
+		if not Unlocks.unstuck then
+			Unlocks.unstuck = true
+		end
 		Notify("It looks less stuck.")
 	end
 
@@ -104,15 +114,27 @@ function PromptLoad()
 
 	-- Level Computers
 	outputs.door2arms = function()
+		if Unlocks.symbolsdoor then
+			return
+		end
 		Unlocks.symbolsdoor = true
+		doorSound()
 		Notify("Door opening...")
 	end
 	outputs.shortcutpass = function()
+		if Unlocks.enddoor then
+			return
+		end
 		Unlocks.enddoor = true
+		doorSound()
 		Notify("Door opening...")
 	end
 	outputs.shortcutsesa = function()
+		if Unlocks.shortcut then
+			return
+		end
 		Unlocks.shortcut = true
+		doorSound()
 		Notify("Open sesame!")
 	end
 	outputs.freefree = function()
@@ -151,6 +173,7 @@ function love.textinput(t)
 	end
 	if string.len(typedText) < 4 then
 		typedText = typedText .. t
+		love.audio.play(Sounds.type)
 		typedText = string.lower(typedText)
 	end
 end
@@ -159,6 +182,7 @@ local function SubmitCode()
 	local attempt = string.lower(promptType .. typedText)
 	print("Attempted " .. attempt)
 	local attemptResult = outputs[attempt]
+	love.audio.play(Sounds.enter)
 	Prompting = false
 	if attemptResult == nil then
 		if typedText ~= "" then
@@ -171,7 +195,9 @@ local function SubmitCode()
 	Release()
 end
 
-function PromptUpdate(dt) end
+function PromptUpdate(dt)
+	PlayerUpdateDroneSound(dt, false)
+end
 
 function PromptKeypressed(key, scancode, isrepeat)
 	if not Prompting then
@@ -183,6 +209,7 @@ function PromptKeypressed(key, scancode, isrepeat)
 	if key == "backspace" then
 		if string.len(typedText) > 0 then
 			typedText = string.sub(typedText, 0, string.len(typedText) - 1)
+			love.audio.play(Sounds.type)
 		end
 	end
 end

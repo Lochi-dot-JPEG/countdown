@@ -40,12 +40,13 @@ local function nextOutput()
 	if textObject ~= nil then
 		Outputting = true
 		local new_message = table.remove(messageQueue, 1)
+		love.audio.play(Sounds.enter)
 		new_message = wrap(new_message, 28)
 		textObject:set(new_message)
 	end
 end
 
-local function updateOutput()
+local function refreshOutput(dt)
 	if #messageQueue == 0 then
 		Outputting = false
 		Release()
@@ -66,10 +67,12 @@ end
 
 function Notify(_text)
 	table.insert(messageQueue, _text)
-	updateOutput()
+	refreshOutput()
 end
 
-function OutputUpdate(dt) end
+function OutputUpdate(dt)
+	PlayerUpdateDroneSound(dt, false)
+end
 
 function OutputDraw()
 	if Outputting then

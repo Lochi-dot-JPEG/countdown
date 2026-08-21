@@ -8,7 +8,7 @@ PLAYER_MAX_HP = 5.0
 PlayerHp = PLAYER_MAX_HP
 
 local velocity = Vector.new(0, 0)
-local gravity = 2.5
+local gravity = 5.5
 local drag = 1.5
 HoldingObjects = {}
 local object_offset = Vector.new(TileSize / 2, TileSize / 2)
@@ -72,8 +72,10 @@ local function OnEnterBaseComp()
 
 	if added_batteries > 1 then
 		Notify("> Adds " .. added_batteries .. " batteries")
+		love.audio.play(Sounds.item)
 	elseif added_batteries > 0 then
 		Notify("> Adds battery")
+		love.audio.play(Sounds.item)
 	end
 	if #added_logs ~= 0 then
 		local logmsg = ""
@@ -158,13 +160,37 @@ end
 
 function Collide()
 	PlayerHp = PlayerHp - 1
+	if PlayerHp > 0 then
+		love.audio.stop(Sounds.hurt)
+		love.audio.play(Sounds.hurt)
+	end
 	Flash(0.2, 0.8, 0.8, 0.8)
+end
+
+function PlayerUpdateDroneSound(dt, active)
+	local target_vol = 2.0 - velocity.y
+	local current_vol = Sounds.dronefly:getVolume()
+	local new_pitch = math.max(0.8 - velocity.y / 8, 0.4)
+	if not active then
+		target_vol = 0
+		new_pitch = 0.4
+	end
+	Sounds.dronefly:setPitch(new_pitch)
+	if current_vol < target_vol then
+		Sounds.dronefly:setVolume(current_vol + dt * 2)
+	end
+	if current_vol > target_vol then
+		Sounds.dronefly:setVolume(current_vol - dt * 2)
+	end
 end
 
 function PlayerUpdate(dt)
 	if PlayerHp <= 0 then
 		BatteryDead()
 	end
+
+	love.audio.play(Sounds.dronefly)
+	PlayerUpdateDroneSound(dt, true)
 	local net_horizontal = 0
 	if input_pressed(Inputs.down) then
 		accel_y(dt * PlayerSpeed)
@@ -196,6 +222,7 @@ function PlayerUpdate(dt)
 		if object.position ~= nil then
 			local dist = Vector.distance_squared_to(object.position + object_offset, PlayerPos)
 			if dist < PickupDistance then
+				love.audio.play(Sounds.item)
 				table.remove(CurrentRoom.objects, key)
 				table.insert(HoldingObjects, object)
 			end

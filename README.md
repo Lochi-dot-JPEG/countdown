@@ -16,7 +16,12 @@ Play it on [itch.io](https://lochi-makes-games.itch.io/jammed)
 
 Dependencies: aseprite, npm, love2d
 
-$ npm i love.js
+### Local
+
+$ ./build-local.sh
+
+### Web
+
 $ ./build.sh
 
 ## AI Usage

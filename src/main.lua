@@ -59,10 +59,10 @@ end
 
 local function drawUi()
 	local newstatus = "Battery: "
-	    .. math.ceil(time)
-	    .. "\nHull integrity: "
-	    .. math.floor(PlayerHp / PLAYER_MAX_HP * 100)
-	    .. "%"
+		.. math.ceil(time)
+		.. "\nHull integrity: "
+		.. math.floor(PlayerHp / PLAYER_MAX_HP * 100)
+		.. "%"
 	textTimerObject:set(newstatus)
 	love.graphics.draw(textTimerObject, 8, 8)
 end
@@ -123,7 +123,7 @@ function love.load()
 	Textures.base = love.graphics.newImage("textures/base.png")
 	Textures.base_back = love.graphics.newImage("textures/baseback.png")
 	Textures.prompt = love.graphics.newImage("textures/prompt.png")
-	Textures.outputbg = love.graphics.newImage("textures/outputbg.png")
+	Textures.outputbg = love.graphics.newImage("textures/window.png")
 	Textures.paper = love.graphics.newImage("textures/paper.png")
 	Textures.battery = love.graphics.newImage("textures/battery.png")
 	Textures.ending = love.graphics.newImage("textures/screens2.png")

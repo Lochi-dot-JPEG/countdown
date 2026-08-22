@@ -120,7 +120,6 @@ function MoveY(amount)
 		if collider == "comp" then
 			OnEnterBaseComp()
 		end
-		-- TODO check for papers here
 		Prompt(collider)
 	end
 end

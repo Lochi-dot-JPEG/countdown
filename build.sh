@@ -13,6 +13,14 @@ FILES="$FILES $(find -type f -name "*.ogg")"
 FILES="$FILES $(find -type f -name "*.wav")"
 FILES="$FILES $(find -type f -name "*.otf")"
 zip -9 -r countdown.love $FILES
+
 npx love.js -c countdown.love output -m 106777216
+# Replace style
+cp index.html output/index.html
+cp love.css output/theme/love.css
+rm "output/theme/bg.png"
+
+echo "Built to ./output/"
+echo "Running locally on localhost:8000"
 cd output
 python -m http.server 8000

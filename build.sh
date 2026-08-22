@@ -1,9 +1,9 @@
 #!/bin/sh
 
-cd textures
+cd src/textures
 sh asepritecompile.sh
 cd ..
-mkdir output
+mkdir ../output
 rm countdown.love
 FILES=""
 
@@ -14,10 +14,12 @@ FILES="$FILES $(find -type f -name "*.wav")"
 FILES="$FILES $(find -type f -name "*.otf")"
 zip -9 -r countdown.love $FILES
 
-npx love.js -c countdown.love output -m 106777216
+npx love.js -c countdown.love ../output -m 106777216
+
 # Replace style
-cp index.html output/index.html
-cp love.css output/theme/love.css
+cd ..
+cp src/index.html output/index.html
+cp src/love.css output/theme/love.css
 rm "output/theme/bg.png"
 
 echo "Built to ./output/"
